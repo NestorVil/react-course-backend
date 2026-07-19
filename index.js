@@ -35,6 +35,27 @@ app.get('/', (_, response) => {
   response.send('<h1>Hello World!</h1>');
 });
 
+app.put('/api/notes/:id', (request, response) => {
+  const id = request.params.id;
+  const body = request.body;
+
+  const note = notes.find(note => note.id === id);
+
+  if (!note) {
+    return response.status(404).end();
+  }
+
+  const changedNote = {
+    content: body.content,
+    important: body.important,
+    id: note.id
+  };
+
+  notes = notes.map(note => (note.id === id ? changedNote : note));
+
+  response.json(changedNote);
+});
+
 app.get('/api/notes', (_, response) => {
   response.json(notes);
 });
